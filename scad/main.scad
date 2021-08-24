@@ -22,41 +22,65 @@
     
 ************************************************************************/
 
-include <./rasppi4b/rasppi4b.scad>
+include <./rasppi/rasppi.scad>
 include <./hyperpixel/hyperpixel.scad>
 include <case.scad>
 include <prusa_mk3s_bracket.scad>
 include <desk_stand.scad>
+include <lack_mount.scad>
 
 // Rendering quality
 $fn = 20;
 
-// Choose what to display:
+// Display the upper case?
 display_upper_case = "Yes"; // [Yes, No]
+
+// Display the lower case?
 display_lower_case = "Yes"; // [Yes, No]
-display_pi4 = "Yes"; // [Yes, No]
+
+// Display the Raspberry Pi module
+display_raspberry  = "Yes"; // [Yes, No]
+
+// Raspberry version
+raspberry_version = 4; // [4,3]
+
+// Display the Hyperpixel 4.0 device?
 display_hyperpixel = "Yes"; // [Yes, No]
+
+// Display the Prusa i3 MK3s bracket?
 display_prusa_bracket = "Yes"; // [Yes, No]
+
+// # of desk stands to display?
 display_desk_stand = "2"; // [0, 1, 2]
+
+// Display LACK mount bracket?
+display_lack_mount_bracket = "Yes"; // [Yes, No]
+
+// Add cutout for camera flatcable?
+camera_cutout = "Yes"; // [Yes, No]
 
 // Lift the upper case?
 lift_upper_case = "Yes"; // [Yes, No]
 
-// Render the Raspberry Pi 4B board
-if (display_pi4 == "Yes") rasppi4b();
+if(display_raspberry == "Yes") {
+    rasppi(ver=raspberry_version);
+}
 
 // Render the Hyperpixel 4.0 display
 if (display_hyperpixel == "Yes") hyperpixel();
 
 // Render the lower case
-if (display_lower_case == "Yes") lower_case();
+if (display_lower_case == "Yes") lower_case(camera_cutout, ver=raspberry_version);
 
 // Render the upper case
 lift = (lift_upper_case == "Yes") ? 30:0;
-if (display_upper_case == "Yes") upper_case(lift);
+if (display_upper_case == "Yes") upper_case(lift, ver=raspberry_version);
 
 // Render the Prusa MK3S bracket
 if (display_prusa_bracket == "Yes") prusa_mk3s_bracket();
 
 // Render the desk stand
 if (display_desk_stand != "0") desk_stand(display_desk_stand);
+
+// Render the LACK mount bracket
+if (display_lack_mount_bracket == "Yes") lack_mount_bracket();

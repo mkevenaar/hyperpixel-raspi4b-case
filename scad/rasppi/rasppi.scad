@@ -26,9 +26,9 @@ include <pcb.scad>
 include <connectors.scad>
 include <components.scad>
 
-module rasppi4b()
+module rasppi(ver=4)
 {
     pcb();
-    connectors();
-    components();
+    connectors(ver);
+    components(ver);
 }

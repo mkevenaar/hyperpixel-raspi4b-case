@@ -28,18 +28,34 @@ use <BOSL/shapes.scad>
 
 // The connector cutouts are in a module so they can be common to both
 // the upper and lower case parts
-module connector_cutouts()
+module connector_cutouts(ver=4)
 {
     // Recess
     move([3.25,-11.5,-2.5]) cuboid([57,10,3.5+10], center=false, fillet = 1.5);
 
     // Power in
-    move([6.25,-3.5,1.5]) cuboid([10,4,3.5], center=false, fillet = 1, edges=EDGES_Y_ALL);
+    if(ver == 4)
+    {
+        move([6.25,-3.5,1.5]) cuboid([10,4,3.5], center=false, fillet = 1, edges=EDGES_Y_ALL);
+    }
+    else if(ver == 3)
+    {
+        move([10.6 - 8.5/2,-3.5,1.5]) cuboid([8.5,4,3.5], center=false, fillet=1,edges=EDGES_Y_ALL);
+    }
 
     // HDMI
-    move([22,-3.5,1.5]) {
-        move([0.5,0,-0.5]) cuboid([7.25,4,3.25], center=false, fillet = 0.5, edges=EDGES_Y_ALL);
-        move([13.75,0,-0.5]) cuboid([7.25,4,3.25], center=false, fillet = 0.5, edges=EDGES_Y_ALL);
+    if(ver == 4)
+    {
+        move([22,-3.5,1.5]) {
+            move([0.5,0,-0.5]) cuboid([7.25,4,3.25], center=false, fillet = 0.5, edges=EDGES_Y_ALL);
+            move([13.75,0,-0.5]) cuboid([7.25,4,3.25], center=false, fillet = 0.5, edges=EDGES_Y_ALL);
+        }
+    }
+    else if(ver == 3)
+    {
+        move([32 - 17/2,-3.5,1.5]) {
+            cuboid([17,4,7], center=false, fillet=0.5, edges=EDGES_Y_ALL);
+        }
     }
 
     // Audio
@@ -47,24 +63,44 @@ module connector_cutouts()
         move([3.125,1,3.125]) rotate([90,0,0]) cyl(h=6, d=6.5);
     }
 
-    // USB2
-    move([85,1.25,1.25]) {
-        move([0,0,0]) cuboid([6,15.5,16.75], center=false, fillet = 0.5, edges=EDGES_X_ALL);
-    }
+    if(ver == 4)
+    {
+        // USB2
+        move([85,1.25,1.25]) {
+            move([0,0,0]) cuboid([6,15.5,16.75], center=false, fillet = 0.5, edges=EDGES_X_ALL);
+        }
 
-    // USB3
-    move([85,19.25,1.25]) {
-        move([0,0,0]) cuboid([6,15.5,16.75], center=false, fillet = 0.5, edges=EDGES_X_ALL);
-    }
+        // USB3
+        move([85,19.25,1.25]) {
+            move([0,0,0]) cuboid([6,15.5,16.75], center=false, fillet = 0.5, edges=EDGES_X_ALL);
+        }
 
-    // Ethernet
-    move([85,37.5,1.25]) {
-        move([0,0,0]) cuboid([6,16.5,14.25], center=false, fillet = 0.5, edges=EDGES_X_ALL);
+        // Ethernet
+        move([85,37.5,1.25]) {
+            move([0,0,0]) cuboid([6,16.5,14.25], center=false, fillet = 0.5, edges=EDGES_X_ALL);
+        }
+    }
+    else if(ver == 3)
+    {
+        // USB bank 1
+        move([85,47 - 15.5/2,1.25]) {
+            move([0,0,0]) cuboid([6,15.5,16.75], center=false, fillet = 0.5, edges=EDGES_X_ALL);
+        }
+
+        // USB bank 2
+        move([85,29 - 15.5/2,1.25]) {
+            move([0,0,0]) cuboid([6,15.5,16.75], center=false, fillet = 0.5, edges=EDGES_X_ALL);
+        }
+
+        // Ethernet
+        move([85,10.25 - 16.5/2,1.25]) {
+            move([0,0,0]) cuboid([6,16.5,14.25], center=false, fillet = 0.5, edges=EDGES_X_ALL);
+        }
     }
 }
 
 // Render the lower case part
-module lower_case()
+module lower_case(camera_cutout, ver=4)
 {
     // Lower case
     difference() {
@@ -78,29 +114,33 @@ module lower_case()
                         }
 
                         union() {
-                        // Add 2.5mm of thickness to the wall for side connectors
-                        move([15,1,0]) cuboid([64,2.5,8], center=false);
+                            // Add 2.5mm of thickness to the wall for side connectors
+                            move([15,1,0]) cuboid([64,2.5,8], center=false);
 
-                        // Pi stand-offs
-                        move([15,4,-3]) {
-                            // Internal stand-off, 2.5mm high (screw dia 2.8mm)
-                            move([3.5,3.5,4]) cyl(h=2, d=10, center=false);
-                            move([3.5 + 58,3.5,4]) cyl(h=2, d=10, center=false);
-                            move([3.5,3.5 + 49,4]) cyl(h=2, d=10, center=false);
-                            move([3.5 + 58,3.5 + 49,4]) cyl(h=2, d=10, center=false);
-                        }
+                            // Pi stand-offs
+                            move([15,4,-3]) {
+                                // Internal stand-off, 2.5mm high (screw dia 2.8mm)
+                                move([3.5,3.5,4]) cyl(h=2, d=10, center=false);
+                                move([3.5 + 58,3.5,4]) cyl(h=2, d=10, center=false);
+                                move([3.5,3.5 + 49,4]) cyl(h=2, d=10, center=false);
+                                move([3.5 + 58,3.5 + 49,4]) cyl(h=2, d=10, center=false);
+                            }
 
-                        move([15,4,-3]) {
-                            // Internal stand-off, 2.5mm high
-                            move([3.5,3.5,6]) cyl(h=1.5, d=6, center=false);
-                            move([3.5 + 58,3.5,6]) cyl(h=1.5, d=6, center=false);
-                            move([3.5,3.5 + 49,6]) cyl(h=1.5, d=6, center=false);
-                            move([3.5 + 58,3.5 + 49,6]) cyl(h=1.5, d=6, center=false);
-                        }
+                            move([15,4,-3]) {
+                                // Internal stand-off, 2.5mm high
+                                move([3.5,3.5,6]) cyl(h=1.5, d=6, center=false);
+                                move([3.5 + 58,3.5,6]) cyl(h=1.5, d=6, center=false);
+                                move([3.5,3.5 + 49,6]) cyl(h=1.5, d=6, center=false);
+                                move([3.5 + 58,3.5 + 49,6]) cyl(h=1.5, d=6, center=false);
+                            }
                         }
                     }
-
-                    // Mounting holes for Pi4 PCB
+                    if (camera_cutout == "Yes") {
+                        // Camera cable slot
+                        move([7,40.5,-10]) cuboid([1.75,19.5,50], center=false);
+                    }
+                    
+                    // Mounting holes for Pi PCB
                     move([15,4,-6]) {
                         move([3.5,3.5,5]) cyl(h=6, d=2.8, center=false);
                         move([3.5 + 58,3.5,5]) cyl(h=6, d=2.8, center=false);
@@ -149,7 +189,7 @@ module lower_case()
         }
 
         // Add the connector cutouts
-        connector_cutouts();
+        connector_cutouts(ver);
 
         // SD card cutout
         move([-8,28.2,-2.5]) cuboid([19,12.5,6]);
@@ -182,7 +222,7 @@ module lower_case()
 }
 
 // Render the upper case part
-module upper_case(lift)
+module upper_case(lift, ver=4)
 {
     // Upper case
     difference() {
@@ -228,7 +268,7 @@ module upper_case(lift)
         }
 
         // Add the connector cutouts
-        move([0,0,lift]) connector_cutouts();
+        move([0,0,lift]) connector_cutouts(ver);
 
         // Air vents - back left and right
         hgh = 14 + lift;

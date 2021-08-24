@@ -26,7 +26,7 @@ include <../BOSL/constants.scad>
 use <../BOSL/transforms.scad>
 use <../BOSL/shapes.scad>
 
-module components()
+module components(ver=4)
 {
     move([0,0,1.6]) {
         // RF shield
@@ -38,16 +38,21 @@ module components()
         color("grey") move([21.9+1,25+1,1.25]) cuboid([13,13,0.75], center=false, fillet = 1, edges=EDGES_Z_ALL);
 
         // RAM
-        color([0.2,0.2,0.2]) move([39,25,0]) cuboid([11.75,15,1], center=false);
+        if (ver==4) {
+            color([0.2,0.2,0.2]) move([39,25,0]) cuboid([11.75,15,1], center=false);
+        } 
+        else if (ver==3) {
+            color([0.2,0.2,0.2]) move([32,25,-2.6]) cuboid([15,15,1], center=false);
+        }
 
         // Chip 1
-        color([0.2,0.2,0.2]) move([55.6,35,0]) cuboid([6.1,6.1,1], center=false);
+        if (ver==4) color([0.2,0.2,0.2]) move([55.6,35,0]) cuboid([6.1,6.1,1], center=false);
 
         // Chip 2
         color([0.2,0.2,0.2]) move([55.7,20,0]) cuboid([8,8,1], center=false);
 
         // Activity LED
-        color("red") move([0.5,10.75,0]) cuboid([1,1.5,1], center=false, fillet = 0.25, edges=EDGES_Z_ALL);
+        color("lime") move([0.5,10.75,0]) cuboid([1,1.5,1], center=false, fillet = 0.25, edges=EDGES_Z_ALL);
 
         // Power LED
         color("red") move([0.5,7.15,0]) cuboid([1,1.5,1], center=false, fillet = 0.25, edges=EDGES_Z_ALL);
